@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: Login-Server
+
+    # 添加密码校验
+  security:
+    basic:
+      enable: false
+#    user:
+#      name: admin
+#      password: pass
+
+server:
+  port: 8500
+
+
+## eureka 客户端基本配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://admin:pass@localhost:8100/eureka
+
+
