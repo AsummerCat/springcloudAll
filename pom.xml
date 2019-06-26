@@ -7,6 +7,13 @@
     <groupId>com.linjingc</groupId>
     <artifactId>springcloudAll</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-
+    <modules>
+        <module>eurekaserver</module>
+        <module>loginserver</module>
+        <module>tipsConsumer</module>
+        <module>TipsProducer</module>
+        <module>ZuulServer</module>
+    </modules>
 </project>
