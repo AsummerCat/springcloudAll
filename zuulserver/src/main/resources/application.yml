@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: Zuul-Server
+
+    # 添加密码校验
+  security:
+    user:
+      name: admin
+      password: pass
+
+server:
+  port: 8400
+
+
+## eureka 客户端基本配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://admin:pass@localhost:8100/eureka
+
+
+
+zuul:
+  ignoredServices: '*' # 忽略所有请求
+  host:
+    connect-timeout-millis: 3000
+    socket-timeout-millis: 3000
+  routes:
+    TIP-CONSUMER: /TIP-CONSUMER/**
+    TIP-PRODUCER-SERVER: /TIP-PRODUCER-SERVER/**
+
