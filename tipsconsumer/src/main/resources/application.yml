@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: Tip-Consumer
+server:
+  port: 8300
+
+
+## eureka 客户端基本配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://admin:pass@localhost:8100/eureka
+
+## 开启feign默认开启的hystrix 不开启会导致降级失败
+feign:
+  hystrix:
+    enabled: true
+
+## 开启ribbon重试机制
+ribbon:
+  MaxAutoRetries: 1 #同一台实例最大重试次数,不包括首次调用
+  MaxAutoRetriesNextServer: 1 #重试负载均衡其他的实例最大重试次数,不包括首次调用
+  OkToRetryOnAllOperations: false # 对所有的操作请求都进行重试，如果是get则可以，如果是post,put等操作没有实现幂等的情况下是很危险的，所以设置为false
+  ConnectTimeout: 1000 #请求连接的超时时间
+  ReadTimeout: 5000 #请求处理的超时时间
+
+  # 根据上面的参数计算重试的次数：
+  #MaxAutoRetries+MaxAutoRetriesNextServer+(MaxAutoRetries *MaxAutoRetriesNextServer) 即重试3次 则一共产生4次调用
+
+
+## 开启断路器
+hystrix:
+  # 核心线程池大小  默认10
+  coreSize: 20
+  # 最大最大线程池大小
+  maximumSize: 30
+  # 此属性允许maximumSize的配置生效。 那么该值可以等于或高于coreSize。 设置coreSize <maximumSize会创建一个线程池，该线程池可以支持maximumSize并发，但在相对不活动期间将向系统返回线程。 （以keepAliveTimeInMinutes为准）
+  allowMaximumSizeToDivergeFromCoreSize: true
+  # 请求等待队列
+  maxQueueSize: 10
+  # 队列大小拒绝阀值 在还未超过请求等待队列时也会拒绝的大小
+  queueSizeRejectionThreshold: 10
+
+  command:
+    default:
+      execution:
+        timeout:
+          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000 #断路器超时时间，默认1000ms
+            #设置回退的最大线程数
+          semaphore:
+            maxConcurrentRequests: 100
+              #如果配置ribbon的重试，hystrix的超时时间要大于ribbon的超时时间，ribbon才会重试
+              #hystrix的超时时间=(1 + MaxAutoRetries + MaxAutoRetriesNextServer) * ReadTimeout 比较好，具体看需求
+              #isolation:
+              #隔离策略，有THREAD和SEMAPHORE
+            #THREAD - 它在单独的线程上执行，并发请求受线程池中的线程数量的限制
+            #SEMAPHORE - 它在调用线程上执行，并发请求受到信号量计数的限制
+
+    ##单独方法 添加 断路器设置
+    TipsService#sendTip(String):
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 22000
+    TipsService#index():
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 18000

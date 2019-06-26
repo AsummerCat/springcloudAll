@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Tip-Producer-Server
+server:
+  port: 8200
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://admin:pass@localhost:8100/eureka
