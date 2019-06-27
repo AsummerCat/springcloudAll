@@ -5,7 +5,7 @@ spring:
     # 添加密码校验
   security:
     basic:
-      enable: false
+      enable: true
 #    user:
 #      name: admin
 #      password: pass

@@ -10,6 +10,9 @@ import java.util.*;
 
 public class JWTutils {
     private static Algorithm algorithm = Algorithm.HMAC256("secret");
+    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String TOKEN_HEADER = "Authorization";
+    public static final String ISSUER = "issuer";
 
 
     /**
@@ -17,11 +20,10 @@ public class JWTutils {
      *
      * @param id
      * @param subject  主题 可以是JSON数据 尽可能少
-     * @param issuer   签名生成者
      * @param audience 签名接受者
      * @return
      */
-    public static String createJWT(String id, String subject, String issuer, String audience) {
+    public static String createJWT(String id, String subject, String audience) {
         Map<String, Object> map = new HashMap<String, Object>(4);
         map.put("alg", "HS256");
         map.put("typ", "JWT");
@@ -37,7 +39,7 @@ public class JWTutils {
                 .withClaim("age", "18")
                 .withClaim("org", "www.linjingc.top")
                 //签名是有谁生成 例如 服务器
-                .withIssuer(issuer)
+                .withIssuer(ISSUER)
                 //签名的主题
                 .withSubject(subject)
                 //.withNotBefore(new Date())//该jwt都是不可用的时间
@@ -59,13 +61,13 @@ public class JWTutils {
      * @param token
      * @return
      */
-    public static boolean verifyToken(String token,String issuer) {
+    public static boolean verifyToken(String token, String issuer) {
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(issuer).build();
         DecodedJWT jwt = verifier.verify(token);
         String subject = jwt.getSubject();
         List<String> audience = jwt.getAudience();
         String payload = jwt.getPayload();
-        System.out.println("测试"+payload);
+        System.out.println("测试" + payload);
 
         Map<String, Claim> claims = jwt.getClaims();
         System.out.println(subject);
@@ -120,12 +122,27 @@ public class JWTutils {
 
     /**
      * 测试方法
+     *
      * @param arr
      */
     public static void main(String[] arr) {
-        String jwt = createJWT("no.1", "这是个json消息", "夏天的猫", "夏天的狗");
-        verifyToken(jwt,"夏天的猫");
+        String jwt = createJWT("no.1", "这是个json消息", "夏天的狗");
+        verifyToken(jwt, "夏天的猫");
     }
 
+    /**
+     * 从token中获取数据
+     *
+     * @param token
+     * @return
+     */
+    public static String getUsername(String token) {
+        JWTVerifier verifier = JWT.require(algorithm).withIssuer(ISSUER).build();
+        DecodedJWT jwt = verifier.verify(token);
+        String subject = jwt.getSubject();
+        List<String> audience = jwt.getAudience();
+        String payload = jwt.getPayload();
+        return subject;
+    }
 
 }
