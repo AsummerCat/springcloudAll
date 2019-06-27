@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 /**
  * @author cxc
@@ -67,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 //自定义登录页
-                //  .loginPage("/login")
+                  .loginPage("/login")
 //                //登录成功页面
                 .defaultSuccessUrl("/hello")
                 .permitAll()
@@ -99,9 +100,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          * 方式一 写在内存中的角色
          */
         //在此处应用自定义PasswordEncoder
-        auth.inMemoryAuthentication().passwordEncoder(bCryptPasswordEncoder())
+        auth.inMemoryAuthentication().passwordEncoder(passwordEncoder())
                 //写在内存中的角色
-                .withUser("user").password("$2a$10$rqOD.4PCiTJUm3BrNDjxfO287rWocQCjT7p/TE3YwTi6LhSXSX0Ba").roles("USER")
+                .withUser("user").password("password").roles("USER")
                 .and() //这个是指可以写多个
                 .withUser("admin").password("$2a$10$rqOD.4PCiTJUm3BrNDjxfO287rWocQCjT7p/TE3YwTi6LhSXSX0Ba").authorities("ROLE_USER", "ROLE_ADMIN");
 
@@ -112,6 +113,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //    auth.eraseCredentials(false);   //这里是清除还是不清除登录的密码  SecurityContextHolder中
     }
 
+    /**
+     * 不加密 官方已经不推荐了
+     * 自定义密码加密器
+     */
+    @Bean
+    public static NoOpPasswordEncoder passwordEncoder() {
+        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+    }
     /**
      * BCryptPasswordEncoder 使用BCrypt的强散列哈希加密实现，并可以由客户端指定加密的强度strength，强度越高安全性自然就越高，默认为10.
      * 自定义密码加密器

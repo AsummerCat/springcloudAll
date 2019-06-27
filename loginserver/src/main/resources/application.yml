@@ -24,3 +24,10 @@ eureka:
       defaultZone: http://admin:pass@localhost:8100/eureka
 
 
+
+#JWT配置
+jwt:
+#  TOKEN_PREFIX: Bearer
+#  TOKEN_HEADER: Authorization
+#  ISSUER: issuer
+  secret: SECRET

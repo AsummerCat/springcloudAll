@@ -1,5 +1,6 @@
 package com.linjingc.loginserver.controller;
 
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,10 +12,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date 2019年6月27日10:04:20
  */
 @Controller
+@ServletComponentScan
 public class LoginController {
+
 
     @RequestMapping("/hello")
     public String hello() {
+        return "hello";
+    }
+
+    @RequestMapping("/home")
+    public String home() {
         return "hello";
     }
 
@@ -24,15 +32,16 @@ public class LoginController {
         return "进入首页";
     }
 
-    /**
-     * 登录授权页
-     *
-     * @return
-     */
-    @RequestMapping("login")
-    public String login() {
-        return "login";
-    }
+//    /**
+//     * 登录授权页
+//     *
+//     * @return
+//     */
+//    @RequestMapping("login")
+//    public String login() {
+//
+//        return "login";
+//    }
 
     /**
      * 退出后跳转的页面
