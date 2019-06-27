@@ -1,6 +1,7 @@
 package com.linjingc.loginserver.config.security;
 
 import com.linjingc.loginserver.utils.JWTutils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +16,9 @@ import java.util.ArrayList;
 
 /**
  * JWT 整合Spring Security
- * 访问权限类
+ * 访问认证类
+ * @author cxc
+ * @date 2019年6月27日15:09:19
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -30,7 +33,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
         String tokenHeader = request.getHeader(JWTutils.TOKEN_HEADER);
         // 如果请求头中没有Authorization信息则直接放行了
-        if (tokenHeader == null || !tokenHeader.startsWith(JWTutils.TOKEN_PREFIX)) {
+        if (StringUtils.isEmpty(tokenHeader) || !tokenHeader.startsWith(JWTutils.TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
@@ -43,7 +46,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
         String token = tokenHeader.replace(JWTutils.TOKEN_PREFIX, "");
         String username = JWTutils.getUsername(token);
-        if (username != null) {
+        if (StringUtils.isNotEmpty(username)) {
             return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
         }
         return null;

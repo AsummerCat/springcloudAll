@@ -1,5 +1,6 @@
 package com.linjingc.loginserver.config.security;
 
+import com.alibaba.fastjson.JSON;
 import com.linjingc.loginserver.entity.BasicUser;
 import com.linjingc.loginserver.utils.JWTutils;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,7 +8,7 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * JWT 整合Spring Security 密码校验类
@@ -71,12 +73,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authResult) throws IOException, ServletException {
 
         // 查看源代码会发现调用getPrincipal()方法会返回一个实现了`UserDetails`接口的对象
-        // 所以就是JwtUser啦
-        User principal = (User) authResult.getPrincipal();
+        UserDetails userDetails = (UserDetails) authResult.getPrincipal();
         BasicUser jwtUser = new BasicUser();
-        jwtUser.setUsername(principal.getUsername());
-        System.out.println("jwtUser:" + jwtUser.toString());
-        String token = JWTutils.createJWT("no.1", "这是个json消息", "夏天的狗");
+        jwtUser.setUsername(userDetails.getUsername());
+
+        //签发token
+        String token = JWTutils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(jwtUser), userDetails.getUsername());
         // 返回创建成功的token
         // 但是这里创建的token只是单纯的token
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`

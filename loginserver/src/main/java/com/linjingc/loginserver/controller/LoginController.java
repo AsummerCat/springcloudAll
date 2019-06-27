@@ -1,12 +1,12 @@
 package com.linjingc.loginserver.controller;
 
-import com.linjingc.loginserver.utils.JWTutils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 登录
+ *
  * @author cxc
  * @date 2019年6月27日10:04:20
  */
@@ -26,6 +26,7 @@ public class LoginController {
 
     /**
      * 登录授权页
+     *
      * @return
      */
     @RequestMapping("login")
@@ -35,6 +36,7 @@ public class LoginController {
 
     /**
      * 退出后跳转的页面
+     *
      * @return
      */
     @RequestMapping("byeBye")
@@ -42,8 +44,6 @@ public class LoginController {
     public String byeBye() {
         return "byeBye";
     }
-
-
 
 
 }

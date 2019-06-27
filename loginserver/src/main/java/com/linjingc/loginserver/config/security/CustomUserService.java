@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -19,24 +20,24 @@ public class CustomUserService implements UserDetailsService { //实现 这个�
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {   //这里重构了原来的的方法
         //User user = userRepository.findByUsername(s); //jpa 查询数据库
         BasicUser user = new BasicUser();
-        user.setUsername("ad");    //模拟查询
+        //模拟查询
+        user.setUsername("ad");
         user.setPassword("123456");
 
-
-        List<SimpleGrantedAuthority> auths = new ArrayList<>();  //权限
-        auths.add(new SimpleGrantedAuthority("add"));//这里添加权限 可以添加多个权限
+        //权限
+        List<SimpleGrantedAuthority> auths = new ArrayList<>();
+        //这里添加权限 可以添加多个权限
+        auths.add(new SimpleGrantedAuthority("add"));
         auths.add(new SimpleGrantedAuthority("update"));
         auths.add(new SimpleGrantedAuthority("delete"));
         auths.add(new SimpleGrantedAuthority("USER"));
-        auths.add(new SimpleGrantedAuthority("ROLE_AAA"));  //任何以ROLE_开头的权限都被视为角色
+        //任何以ROLE_开头的权限都被视为角色
+        auths.add(new SimpleGrantedAuthority("ROLE_AAA"));
 
 
-        if (user == null) {
+        if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户名不存在");
         }
-        System.out.println("userName:" + userName);
-        System.out.println("username:" + user.getUsername() + ";password:" + user.getPassword());
-        return new User(user.getUsername(),
-                user.getPassword(), auths);
+        return new User(user.getUsername(), user.getPassword(), auths);
     }
 }

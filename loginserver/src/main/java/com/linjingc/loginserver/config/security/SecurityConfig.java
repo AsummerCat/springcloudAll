@@ -10,9 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * @author cxc
@@ -68,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 //自定义登录页
-              //  .loginPage("/login")
+                //  .loginPage("/login")
 //                //登录成功页面
                 .defaultSuccessUrl("/hello")
                 .permitAll()
@@ -99,10 +98,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         /**
          * 方式一 写在内存中的角色
          */
-        auth.inMemoryAuthentication().passwordEncoder(passwordEncoder())//在此处应用自定义PasswordEncoder
-                .withUser("user").password("password").roles("USER")  //写在内存中的角色
+        //在此处应用自定义PasswordEncoder
+        auth.inMemoryAuthentication().passwordEncoder(bCryptPasswordEncoder())
+                //写在内存中的角色
+                .withUser("user").password("$2a$10$rqOD.4PCiTJUm3BrNDjxfO287rWocQCjT7p/TE3YwTi6LhSXSX0Ba").roles("USER")
                 .and() //这个是指可以写多个
-                .withUser("admin").password("password").authorities("ROLE_USER", "ROLE_ADMIN");
+                .withUser("admin").password("$2a$10$rqOD.4PCiTJUm3BrNDjxfO287rWocQCjT7p/TE3YwTi6LhSXSX0Ba").authorities("ROLE_USER", "ROLE_ADMIN");
 
         /**
          * 方式二 数据库查询用户信息
@@ -111,38 +112,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //    auth.eraseCredentials(false);   //这里是清除还是不清除登录的密码  SecurityContextHolder中
     }
 
-
-    /**
-     * 不加密 官方已经不推荐了
-     * 自定义密码加密器
-     */
-    @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-    }
-
     /**
      * BCryptPasswordEncoder 使用BCrypt的强散列哈希加密实现，并可以由客户端指定加密的强度strength，强度越高安全性自然就越高，默认为10.
      * 自定义密码加密器
      * BCryptPasswordEncoder(int strength, SecureRandom random)
      * SecureRandom secureRandom3 = SecureRandom.getInstance("SHA1PRNG");
      */
-//    @Bean
-//    public static BCryptPasswordEncoder bCryptPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
-    /**
-     * StandardPasswordEncoder 1024次迭代的SHA-256散列哈希加密实现，并使用一个随机8字节的salt。
-     * 自定义密码加密器
-     * 盐值不需要用户提供，每次随机生成；
-     * public StandardPasswordEncoder(CharSequence secret) 可以设置一个秘钥值
-     * 计算方式: 迭代SHA算法+密钥+随机盐来对密码加密，加密后得到的密码是80位
-     */
-//    @Bean
-//    public static StandardPasswordEncoder standardPasswordEncoder() {
-//        return new StandardPasswordEncoder();
-//    }
+    @Bean
+    public static BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     /**
      * 防止注解使用不了
