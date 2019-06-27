@@ -100,7 +100,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          * 方式一 写在内存中的角色
          */
         //在此处应用自定义PasswordEncoder
-        auth.inMemoryAuthentication().passwordEncoder(passwordEncoder())
+        auth.inMemoryAuthentication().passwordEncoder(bCryptPasswordEncoder())
                 //写在内存中的角色
                 .withUser("user").password("password").roles("USER")
                 .and() //这个是指可以写多个

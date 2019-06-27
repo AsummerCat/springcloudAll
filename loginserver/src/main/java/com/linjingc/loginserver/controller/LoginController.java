@@ -32,16 +32,16 @@ public class LoginController {
         return "进入首页";
     }
 
-//    /**
-//     * 登录授权页
-//     *
-//     * @return
-//     */
-//    @RequestMapping("login")
-//    public String login() {
-//
-//        return "login";
-//    }
+    /**
+     * 登录授权页
+     *
+     * @return
+     */
+    @RequestMapping("login")
+    public String login() {
+
+        return "login";
+    }
 
     /**
      * 退出后跳转的页面
