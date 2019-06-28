@@ -127,7 +127,7 @@ public class JWTutils {
      */
     public static void main(String[] arr) {
         String jwt = createJWT("no.1", "这是个json消息", "夏天的狗");
-        verifyToken(jwt, "夏天的猫");
+        verifyToken(jwt,"夏天的猫");
     }
 
     /**
