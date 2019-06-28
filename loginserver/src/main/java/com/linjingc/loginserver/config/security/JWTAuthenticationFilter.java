@@ -2,7 +2,8 @@ package com.linjingc.loginserver.config.security;
 
 import com.alibaba.fastjson.JSON;
 import com.linjingc.loginserver.entity.BasicUser;
-import com.linjingc.loginserver.utils.JWTutils;
+import com.linjingc.loginserver.utils.JwtConfig;
+import com.linjingc.loginserver.utils.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,9 +30,13 @@ import java.util.UUID;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
+    private JwtConfig jwtConfig;
+    private JwtUtils jwtUtils;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,JwtConfig jwtConfig,JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
+        this.jwtConfig = jwtConfig;
+        this.jwtUtils = jwtUtils;
     }
 
 
@@ -78,11 +84,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         jwtUser.setUsername(userDetails.getUsername());
 
         //签发token
-        String token = JWTutils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(jwtUser), userDetails.getUsername());
+        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(jwtUser), userDetails.getUsername());
         // 返回创建成功的token
         // 但是这里创建的token只是单纯的token
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
-        response.setHeader(JWTutils.TOKEN_HEADER, JWTutils.TOKEN_PREFIX + token);
+        response.setHeader(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
+        Cookie cookie = new Cookie(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
+        cookie.setMaxAge(jwtConfig.getCookieMaxAge());
+        //response.addCookie(cookie);
     }
 
 

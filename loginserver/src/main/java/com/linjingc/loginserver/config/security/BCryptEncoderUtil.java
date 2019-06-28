@@ -4,9 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
+ * 在Security中使用BCryptPasswordEncoder做凭证校验器 如何创建注册密码
+ *
  * @author cxc
  * @date 2018/10/16 17:27
- * 在Security中使用BCryptPasswordEncoder做凭证校验器 如何创建注册密码
  */
 @Slf4j
 public class BCryptEncoderUtil {

@@ -5,14 +5,24 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-public class JWTutils {
-    private static Algorithm algorithm = Algorithm.HMAC256("secret");
-    public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String TOKEN_HEADER = "Authorization";
-    public static final String ISSUER = "issuer";
+@Component
+@Data
+public class JwtUtils {
+    private Algorithm algorithm;
+    @Value("${basic.JWT.secret}")
+    private String secret;
+    @Value("${basic.JWT.tokenPrefix}")
+    public String TOKEN_PREFIX;
+    @Value("${basic.JWT.tokenHeader}")
+    public String TOKEN_HEADER;
+    @Value("${basic.JWT.issuer}")
+    public String ISSUER;
 
 
     /**
@@ -23,7 +33,8 @@ public class JWTutils {
      * @param audience 签名接受者
      * @return
      */
-    public static String createJWT(String id, String subject, String audience) {
+    public String createJWT(String id, String subject, String audience) {
+        algorithm = Algorithm.HMAC256(secret);
         Map<String, Object> map = new HashMap<String, Object>(4);
         map.put("alg", "HS256");
         map.put("typ", "JWT");
@@ -61,7 +72,7 @@ public class JWTutils {
      * @param token
      * @return
      */
-    public static boolean verifyToken(String token, String issuer) {
+    public boolean verifyToken(String token, String issuer) {
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(issuer).build();
         DecodedJWT jwt = verifier.verify(token);
         String subject = jwt.getSubject();
@@ -126,8 +137,8 @@ public class JWTutils {
      * @param arr
      */
     public static void main(String[] arr) {
-        String jwt = createJWT("no.1", "这是个json消息", "夏天的狗");
-        verifyToken(jwt,"夏天的猫");
+        String jwt = new JwtUtils().createJWT("no.1", "这是个json消息", "夏天的狗");
+        new JwtUtils().verifyToken(jwt, "夏天的猫");
     }
 
     /**
@@ -136,7 +147,8 @@ public class JWTutils {
      * @param token
      * @return
      */
-    public static String getUsername(String token) {
+    public String getUsername(String token) {
+        algorithm = Algorithm.HMAC256(secret);
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(ISSUER).build();
         DecodedJWT jwt = verifier.verify(token);
         String subject = jwt.getSubject();

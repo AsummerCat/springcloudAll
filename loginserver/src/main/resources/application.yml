@@ -31,3 +31,14 @@ jwt:
 #  TOKEN_HEADER: Authorization
 #  ISSUER: issuer
   secret: SECRET
+
+
+basic:
+  cookie:
+    maxAge: 432000
+  JWT:
+    #加密
+    secret: secret
+    tokenPrefix: Bearer
+    tokenHeader: Authorization
+    issuer: issuer
