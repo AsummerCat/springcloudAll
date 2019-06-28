@@ -1,4 +1,4 @@
-package com.linjingc.loginserver.config.security;
+package com.linjingc.loginserver.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

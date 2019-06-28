@@ -24,10 +24,6 @@ import java.util.ArrayList;
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
-        super(authenticationManager);
-    }
-
     private JwtConfig jwtConfig;
     private JwtUtils jwtUtils;
 

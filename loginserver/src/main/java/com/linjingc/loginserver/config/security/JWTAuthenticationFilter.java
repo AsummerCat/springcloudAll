@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,7 +32,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private JwtConfig jwtConfig;
     private JwtUtils jwtUtils;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,JwtConfig jwtConfig,JwtUtils jwtUtils) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
         this.jwtUtils = jwtUtils;
@@ -60,7 +59,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 BasicUser loginUser = new BasicUser();
                 loginUser.setUsername(username);
                 loginUser.setPassword(password);
-                return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword(), new ArrayList<>()));
+                UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword(), new ArrayList<>());
+                this.setDetails(request, authRequest);
+                return authenticationManager.authenticate(authRequest);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -85,13 +86,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         //签发token
         String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(jwtUser), userDetails.getUsername());
-        // 返回创建成功的token
         // 但是这里创建的token只是单纯的token
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
         response.setHeader(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
-        Cookie cookie = new Cookie(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
-        cookie.setMaxAge(jwtConfig.getCookieMaxAge());
-        //response.addCookie(cookie);
+        //登录成功后转发到首页
+        request.getRequestDispatcher("/").forward(request, response);
     }
 
 

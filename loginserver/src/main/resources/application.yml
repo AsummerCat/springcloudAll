@@ -2,14 +2,6 @@ spring:
   application:
     name: Login-Server
 
-    # 添加密码校验
-  security:
-    basic:
-      enable: true
-#    user:
-#      name: admin
-#      password: pass
-
 server:
   port: 8500
 
@@ -25,19 +17,17 @@ eureka:
 
 
 
-#JWT配置
-jwt:
-#  TOKEN_PREFIX: Bearer
-#  TOKEN_HEADER: Authorization
-#  ISSUER: issuer
-  secret: SECRET
+
+
 
 
 basic:
+  # cookie配置
   cookie:
     maxAge: 432000
+  #JWT配置
   JWT:
-    #加密
+    ##加密
     secret: secret
     tokenPrefix: Bearer
     tokenHeader: Authorization

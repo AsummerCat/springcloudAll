@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 /**
  * @author cxc
@@ -32,10 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     UserDetailsService customUserService() {
         return new CustomUserService();
     }
+
     @Autowired
     private JwtConfig jwtConfig;
     @Autowired
     private JwtUtils jwtUtils;
+
 
     /**
      * 这里可以设置忽略的路径或者文件
@@ -54,6 +55,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         log.info("--------------------------SecurityConfig加载成功----------------------------");
+
+
+        //开启session
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).maximumSessions(1);
 
         // 去掉 CSRF
         http.csrf().disable()
@@ -81,14 +86,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 //添加jwt验证
-                .addFilter((new JWTAuthenticationFilter(authenticationManager(),jwtConfig,jwtUtils)))
-                .addFilter((new JWTAuthorizationFilter(authenticationManager(),jwtConfig,jwtUtils)))
-                .logout()
+                //登录校验
+                .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtConfig, jwtUtils)))
+                //权限校验
+                .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
+                .logout().deleteCookies("JESSIONID")
                 //退出登录后的默认url是"/home"
-                .logoutSuccessUrl("/byeBye")
-                .permitAll()
-                // 不需要session
-                .invalidateHttpSession(true);
+                .logoutSuccessUrl("/byeBye");
 
     }
 
@@ -108,8 +112,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          */
         //在此处应用自定义PasswordEncoder
         auth.inMemoryAuthentication().passwordEncoder(bCryptPasswordEncoder())
-                //写在内存中的角色
-                .withUser("user").password("password").roles("USER")
+                //写在内存中的角色 密码heihei
+                .withUser("user").password("$2a$10$rqOD.4PCiTJUm3BrNDjxfO287rWocQCjT7p/TE3YwTi6LhSXSX0Ba").roles("USER")
                 .and() //这个是指可以写多个
                 .withUser("admin").password("$2a$10$rqOD.4PCiTJUm3BrNDjxfO287rWocQCjT7p/TE3YwTi6LhSXSX0Ba").authorities("ROLE_USER", "ROLE_ADMIN");
 
