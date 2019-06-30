@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -57,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         log.info("--------------------------SecurityConfig加载成功----------------------------");
 
 
-        //开启session
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).maximumSessions(1);
+        //关闭session
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // 去掉 CSRF
         http.csrf().disable()
@@ -74,10 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated() //都要权限  放在最后
                 .and()
                 //开启cookie保存用户数据
-                .rememberMe()
+                //.rememberMe()
                 //设置cookie有效期
-                .tokenValiditySeconds(60 * 60 * 24 * 7)
-                .and()
+                //.tokenValiditySeconds(60 * 60 * 24 * 7)
+                //.and()
                 .formLogin()
                 //自定义登录页
                 .loginPage("/login")
@@ -90,13 +91,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtConfig, jwtUtils)))
                 //权限校验
                 .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
-                .logout().deleteCookies("JESSIONID")
+                .logout()
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");
-
-        //登录校验
-       // http.addFilterBefore(new JWTAuthenticationFilter1(authenticationManager(), jwtConfig, jwtUtils), UsernamePasswordAuthenticationFilter.class);
-
     }
 
 
