@@ -1,30 +1,19 @@
-package com.linjingc.loginserver.config.security;
+package com.linjingc.loginserversessiontoken.config.security;
 
 import com.alibaba.fastjson.JSON;
-import com.linjingc.loginserver.entity.BasicUser;
-import com.linjingc.loginserver.utils.JwtConfig;
-import com.linjingc.loginserver.utils.JwtUtils;
+import com.linjingc.loginserversessiontoken.entity.BasicUser;
+import com.linjingc.loginserversessiontoken.utils.JwtConfig;
+import com.linjingc.loginserversessiontoken.utils.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.security.web.session.InvalidSessionStrategy;
-import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,13 +26,13 @@ import java.util.UUID;
  * @author cxc
  * @date 2019年6月27日13:08:02
  */
-public class JWTAuthenticationFilter1 extends AbstractAuthenticationProcessingFilter {
+public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private AuthenticationManager authenticationManager;
     private JwtConfig jwtConfig;
     private JwtUtils jwtUtils;
 
-    public JWTAuthenticationFilter1(AuthenticationManager authenticationManager,JwtConfig jwtConfig, JwtUtils jwtUtils) {
+    public MyAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, JwtUtils jwtUtils) {
 
         super(new AntPathRequestMatcher("/login", "POST"));
         this.authenticationManager = authenticationManager;
@@ -53,7 +42,7 @@ public class JWTAuthenticationFilter1 extends AbstractAuthenticationProcessingFi
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         if (username == null) {

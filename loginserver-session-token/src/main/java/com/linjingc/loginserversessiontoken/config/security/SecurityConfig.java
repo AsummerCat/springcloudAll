@@ -1,13 +1,12 @@
-package com.linjingc.loginserver.config.security;
+package com.linjingc.loginserversessiontoken.config.security;
 
-import com.linjingc.loginserver.utils.JwtConfig;
-import com.linjingc.loginserver.utils.JwtUtils;
+import com.linjingc.loginserversessiontoken.utils.JwtConfig;
+import com.linjingc.loginserversessiontoken.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.session.data.redis.ReactiveRedisOperationsSessionRepository;
 
 /**
  * @author cxc
@@ -45,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 这里可以设置忽略的路径或者文件
      */
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         //忽略css.jq.img等文件
         log.info("--------------------------SecurityConfig忽略文件及路径----------------------------");
         web.ignoring().antMatchers("/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**");
@@ -89,13 +87,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 //添加jwt验证
-                //登录校验
-              //  .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtConfig, jwtUtils,reactiveRedisOperationsSessionRepository)))
                 //权限校验
                 .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
                 .logout().deleteCookies("JESSIONID")
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");
+
+        http.addFilterBefore(new MyAuthenticationFilter(authenticationManager(),jwtConfig, jwtUtils), UsernamePasswordAuthenticationFilter.class);
     }
 
 

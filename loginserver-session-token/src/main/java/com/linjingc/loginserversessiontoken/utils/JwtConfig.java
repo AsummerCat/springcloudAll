@@ -1,4 +1,4 @@
-package com.linjingc.loginserver.utils;
+package com.linjingc.loginserversessiontoken.utils;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

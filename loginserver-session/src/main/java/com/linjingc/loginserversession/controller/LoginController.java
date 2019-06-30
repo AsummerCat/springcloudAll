@@ -1,6 +1,5 @@
-package com.linjingc.loginserver.controller;
+package com.linjingc.loginserversession.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

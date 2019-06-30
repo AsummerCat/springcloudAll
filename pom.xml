@@ -11,7 +11,7 @@
 
     <modules>
         <module>eurekaserver</module>
-        <module>LoginServer-Token</module>
+        <module>loginserver-token</module>
         <module>loginserver-session-token</module>
         <module>loginserver-session</module>
         <module>tipsConsumer</module>

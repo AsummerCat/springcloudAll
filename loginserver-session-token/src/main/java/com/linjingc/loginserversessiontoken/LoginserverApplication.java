@@ -1,4 +1,4 @@
-package com.linjingc.loginserver;
+package com.linjingc.loginserversessiontoken;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,8 +7,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableRedisHttpSession(redisNamespace="heihei")
-
+@EnableRedisHttpSession(redisNamespace = "login-session")
 public class LoginserverApplication {
 
     public static void main(String[] args) {

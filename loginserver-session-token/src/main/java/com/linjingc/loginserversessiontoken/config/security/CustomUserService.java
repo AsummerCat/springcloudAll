@@ -1,6 +1,6 @@
-package com.linjingc.loginserver.config.security;
+package com.linjingc.loginserversessiontoken.config.security;
 
-import com.linjingc.loginserver.entity.BasicUser;
+import com.linjingc.loginserversessiontoken.entity.BasicUser;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

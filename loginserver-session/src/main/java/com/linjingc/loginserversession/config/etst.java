@@ -1,4 +1,4 @@
-package com.linjingc.loginserver.config;
+package com.linjingc.loginserversession.config;
 
 public class etst {
 }

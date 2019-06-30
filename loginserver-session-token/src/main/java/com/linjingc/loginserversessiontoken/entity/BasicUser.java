@@ -1,4 +1,4 @@
-package com.linjingc.loginserver.entity;
+package com.linjingc.loginserversessiontoken.entity;
 
 import lombok.Data;
 

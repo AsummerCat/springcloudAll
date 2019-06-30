@@ -1,4 +1,4 @@
-package com.linjingc.loginserver;
+package com.linjingc.loginserversessiontoken;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

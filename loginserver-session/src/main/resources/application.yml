@@ -1,9 +1,9 @@
 spring:
   application:
-    name: Login-Server
+    name: Login-Server-Session
  ## redis 配置
   redis:
-    database: 0
+    database: 1
     host: 112.74.43.136
     port: 6379
     password: jingbaobao
@@ -33,10 +33,4 @@ basic:
   # cookie配置
   cookie:
     maxAge: 432000
-  #JWT配置
-  JWT:
-    ##加密
-    secret: secret
-    tokenPrefix: Bearer
-    tokenHeader: Authorization
-    issuer: issuer
+

@@ -1,7 +1,7 @@
-package com.linjingc.loginserver.config.security;
+package com.linjingc.loginserversessiontoken.config.security;
 
-import com.linjingc.loginserver.utils.JwtConfig;
-import com.linjingc.loginserver.utils.JwtUtils;
+import com.linjingc.loginserversessiontoken.utils.JwtConfig;
+import com.linjingc.loginserversessiontoken.utils.JwtUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,13 +1,9 @@
-package com.linjingc.loginserver.config.security;
+package com.linjingc.loginserversession.config.security;
 
-import com.linjingc.loginserver.utils.JwtConfig;
-import com.linjingc.loginserver.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,8 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.session.data.redis.ReactiveRedisOperationsSessionRepository;
 
 /**
  * @author cxc
@@ -32,20 +26,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    UserDetailsService customUserService() {
-        return new CustomUserService();
-    }
-
-    @Autowired
-    private JwtConfig jwtConfig;
-    @Autowired
-    private JwtUtils jwtUtils;
+    UserDetailsService customUserService() { return new CustomUserService(); }
 
     /**
      * 这里可以设置忽略的路径或者文件
      */
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         //忽略css.jq.img等文件
         log.info("--------------------------SecurityConfig忽略文件及路径----------------------------");
         web.ignoring().antMatchers("/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**");
@@ -67,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 //不需要权限访问
-                .antMatchers( "/**.html", "/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**").permitAll()
+                .antMatchers("/**.html", "/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**").permitAll()
                 //该路径需要验证通过
                 .antMatchers("/", "/index/", "/index/**").authenticated()
                 //该路径需要角色  or 权限XXX

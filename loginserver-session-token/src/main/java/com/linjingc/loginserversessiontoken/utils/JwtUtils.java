@@ -1,4 +1,4 @@
-package com.linjingc.loginserver.utils;
+package com.linjingc.loginserversessiontoken.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
