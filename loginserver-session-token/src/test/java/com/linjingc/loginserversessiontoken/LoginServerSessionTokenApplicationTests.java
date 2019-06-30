@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class LoginserverApplicationTests {
+public class LoginServerSessionTokenApplicationTests {
     @Value("${jwt.secret}")
     private String secret;
 

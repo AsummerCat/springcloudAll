@@ -8,10 +8,10 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableRedisHttpSession(redisNamespace = "login-session")
-public class LoginserverApplication {
+public class LoginServerSessionTokenApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(LoginserverApplication.class, args);
+        SpringApplication.run(LoginServerSessionTokenApplication.class, args);
     }
 
 }

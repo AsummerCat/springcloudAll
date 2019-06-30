@@ -89,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //添加jwt验证
                 //权限校验
                 .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
-                .logout().deleteCookies("JESSIONID")
+                .logout().deleteCookies("login-session")
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");
 

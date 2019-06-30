@@ -6,8 +6,10 @@ import com.linjingc.loginserversessiontoken.utils.JwtConfig;
 import com.linjingc.loginserversessiontoken.utils.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -56,25 +58,45 @@ public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilt
             loginUser.setPassword(password);
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword(), new ArrayList<>());
         Authentication authentication = this.authenticationManager.authenticate(authRequest);
-        //if (authentication != null) {
-        //    super.setContinueChainBeforeSuccessfulAuthentication(true);
-        //}
+        if (authentication != null) {
+            super.setContinueChainBeforeSuccessfulAuthentication(true);
+        }
         return authentication;
     }
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        // 查看源代码会发现调用getPrincipal()方法会返回一个实现了`UserDetails`接口的对象
-        UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-        BasicUser jwtUser = new BasicUser();
-        jwtUser.setUsername(userDetails.getUsername());
-
-        //签发token
-        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(jwtUser), userDetails.getUsername());
-        // 但是这里创建的token只是单纯的token
-        // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
-        response.setHeader(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
-        //登录成功后转发到首页
-        request.getRequestDispatcher("/").forward(request, response);
-    }
+    //@Override
+    //protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    //    // 查看源代码会发现调用getPrincipal()方法会返回一个实现了`UserDetails`接口的对象
+    //    UserDetails userDetails = (UserDetails) authResult.getPrincipal();
+    //    BasicUser jwtUser = new BasicUser();
+    //    jwtUser.setUsername(userDetails.getUsername());
+    //
+    //    //签发token
+    //    String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(jwtUser), userDetails.getUsername());
+    //    // 但是这里创建的token只是单纯的token
+    //    // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
+    //    response.setHeader(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
+    //
+    //
+    //    if (logger.isDebugEnabled()) {
+    //        logger.debug("Authentication success. Updating SecurityContextHolder to contain: "
+    //                + authResult);
+    //    }
+    //
+    //    SecurityContextHolder.getContext().setAuthentication(authResult);
+    //
+    //    rememberMeServices.loginSuccess(request, response, authResult);
+    //
+    //    // Fire event
+    //    if (this.eventPublisher != null) {
+    //        eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(
+    //                authResult, this.getClass()));
+    //    }
+    //
+    //    successHandler.onAuthenticationSuccess(request, response, authResult);
+    //
+    //
+    //    //登录成功后转发到首页
+    //    request.getRequestDispatcher("/").forward(request, response);
+    //}
 }

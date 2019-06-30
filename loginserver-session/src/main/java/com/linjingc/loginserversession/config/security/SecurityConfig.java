@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/hello")
                 .permitAll()
                 .and()
-                .logout().deleteCookies("JESSIONID")
+                .logout().deleteCookies("login-session")
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");
     }

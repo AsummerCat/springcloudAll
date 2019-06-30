@@ -3,13 +3,13 @@ spring:
     name: Login-Server-Session
  ## redis 配置
   redis:
-    database: 1
+    database: 0
     host: 112.74.43.136
     port: 6379
     password: jingbaobao
 
 server:
-  port: 8500
+  port: 8502
 
 
 
