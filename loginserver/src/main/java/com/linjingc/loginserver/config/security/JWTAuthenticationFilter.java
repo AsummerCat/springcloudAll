@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.session.data.redis.ReactiveRedisOperationsSessionRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,11 +32,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private AuthenticationManager authenticationManager;
     private JwtConfig jwtConfig;
     private JwtUtils jwtUtils;
+    private ReactiveRedisOperationsSessionRepository reactiveRedisOperationsSessionRepository;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, JwtUtils jwtUtils) {
+    JWTAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, JwtUtils jwtUtils,ReactiveRedisOperationsSessionRepository reactiveRedisOperationsSessionRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
         this.jwtUtils = jwtUtils;
+        this.reactiveRedisOperationsSessionRepository = reactiveRedisOperationsSessionRepository;
     }
 
 

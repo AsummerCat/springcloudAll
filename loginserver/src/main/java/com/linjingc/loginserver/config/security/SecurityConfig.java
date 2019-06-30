@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.session.data.redis.ReactiveRedisOperationsSessionRepository;
 
 /**
  * @author cxc
@@ -27,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)   //开启Security注解  然后在controller中就可以使用方法注解
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+
     @Bean
     UserDetailsService customUserService() {
         return new CustomUserService();
@@ -36,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtConfig jwtConfig;
     @Autowired
     private JwtUtils jwtUtils;
-
+    @Autowired
+    private ReactiveRedisOperationsSessionRepository reactiveRedisOperationsSessionRepository;
 
     /**
      * 这里可以设置忽略的路径或者文件
@@ -87,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //添加jwt验证
                 //登录校验
-                .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtConfig, jwtUtils)))
+                .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtConfig, jwtUtils,reactiveRedisOperationsSessionRepository)))
                 //权限校验
                 .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
                 .logout().deleteCookies("JESSIONID")

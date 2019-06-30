@@ -28,7 +28,7 @@ public class LoginController {
      *
      * @return
      */
-    @RequestMapping("/hello")
+    @RequestMapping(value="/hello")
     public String hello() {
         return "hello";
     }
