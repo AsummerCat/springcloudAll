@@ -1,7 +1,7 @@
-package com.linjingc.loginserversessiontoken.config.security;
+package com.linjingc.loginservertoken.config.security;
 
-import com.linjingc.loginserversessiontoken.utils.JwtConfig;
-import com.linjingc.loginserversessiontoken.utils.JwtUtils;
+import com.linjingc.loginservertoken.utils.JwtConfig;
+import com.linjingc.loginservertoken.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author cxc
@@ -44,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 这里可以设置忽略的路径或者文件
      */
     @Override
-    public void configure(WebSecurity web) {
+    public void configure(WebSecurity web) throws Exception {
         //忽略css.jq.img等文件
         log.info("--------------------------SecurityConfig忽略文件及路径----------------------------");
         web.ignoring().antMatchers("/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**");
@@ -59,14 +58,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         log.info("--------------------------SecurityConfig加载成功----------------------------");
 
 
-        // 开启session
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).maximumSessions(1);
+        //关闭session
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // 去掉 CSRF
         http.csrf().disable()
                 .authorizeRequests()
                 //不需要权限访问
-                .antMatchers("/**.html", "/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**").permitAll()
+                .antMatchers( "/**.html", "/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**").permitAll()
                 //该路径需要验证通过
                 .antMatchers("/", "/index/", "/index/**").authenticated()
                 //该路径需要角色  or 权限XXX
@@ -76,10 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated() //都要权限  放在最后
                 .and()
                 //开启cookie保存用户数据
-                .rememberMe()
+                //.rememberMe()
                 //设置cookie有效期
-                .tokenValiditySeconds(60 * 60 * 24 * 7)
-                .and()
+                //.tokenValiditySeconds(60 * 60 * 24 * 7)
+                //.and()
                 .formLogin()
                 //自定义登录页
                 .loginPage("/login")
@@ -88,14 +87,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 //添加jwt验证
+                //登录校验
+                .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtConfig, jwtUtils)))
                 //权限校验
-                // .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
-                .logout().deleteCookies("login-session")
+                .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
+                .logout()
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");
-
-        http.addFilterBefore(new MyAuthenticationFilter(authenticationManager(), jwtConfig, jwtUtils), UsernamePasswordAuthenticationFilter.class);
-
     }
 
 
