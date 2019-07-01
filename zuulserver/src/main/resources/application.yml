@@ -17,9 +17,15 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    # 每间隔30s，向服务端发送一次心跳，证明自己依然"存活"
+    lease-renewal-interval-in-seconds: 15
+    # 告诉服务端，如果我60s之内没有给你发心跳，就代表我"死"了，将我踢出掉。
+    lease-expiration-duration-in-seconds: 30
   client:
     serviceUrl:
       defaultZone: http://admin:pass@localhost:8100/eureka
+      healthcheck:
+        enabled: true
 
 
 

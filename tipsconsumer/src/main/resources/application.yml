@@ -13,6 +13,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://admin:pass@localhost:8100/eureka
+    healthcheck:
+      enabled: true
 
 ## 开启feign默认开启的hystrix 不开启会导致降级失败
 feign:

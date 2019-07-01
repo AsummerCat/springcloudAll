@@ -28,4 +28,4 @@ eureka:
       defaultZone: http://${spring.cloud.client.ip-address}:${server.port}/eureka
   ##关闭保护模式
   server:
-    enableSelfPreservation: true
+    enableSelfPreservation: false

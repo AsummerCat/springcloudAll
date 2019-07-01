@@ -12,3 +12,5 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://admin:pass@localhost:8100/eureka
+    healthcheck:
+      enabled: true

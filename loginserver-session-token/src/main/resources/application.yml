@@ -19,9 +19,13 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
   client:
     serviceUrl:
       defaultZone: http://admin:pass@localhost:8100/eureka
+      healthcheck:
+        enabled: true
 
 
 
