@@ -79,11 +79,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 查看源代码会发现调用getPrincipal()方法会返回一个实现了`UserDetails`接口的对象
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-        BasicUser jwtUser = new BasicUser();
-        jwtUser.setUsername(userDetails.getUsername());
 
         //签发token
-        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(jwtUser), userDetails.getUsername());
+        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(userDetails), userDetails.getUsername());
         // 但是这里创建的token只是单纯的token
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
         response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);

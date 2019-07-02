@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //登录校验
                 .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtUtils)))
                 //权限校验
-              .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtUtils)))
+                .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtUtils)))
                 .logout()
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");

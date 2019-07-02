@@ -1,18 +1,19 @@
 package com.linjingc.loginservertoken.config.jwt;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.linjingc.loginservertoken.entity.BasicUser;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -73,47 +74,6 @@ public class JwtUtils {
         return token;
     }
 
-
-    /**
-     * 检验token
-     *
-     * @param token
-     * @return
-     */
-    public boolean verifyToken(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
-        JWTVerifier verifier = JWT.require(algorithm).withIssuer(issuer).build();
-        DecodedJWT jwt = verifier.verify(token);
-
-
-        String subject = jwt.getSubject();
-        List<String> audience = jwt.getAudience();
-        String payload = jwt.getPayload();
-        System.out.println("测试" + payload);
-
-        Map<String, Claim> claims = jwt.getClaims();
-        System.out.println(subject);
-        System.out.println(audience.toString());
-        System.out.println(claims.get("age").asString());
-        System.out.println(claims.get("loginName").asString());
-        System.out.println(claims.get("org").asString());
-
-        return false;
-    }
-
-
-    /**
-     * 判断Token是否过期
-     *
-     * @param expiration
-     * @return true 过期
-     * @author geYang
-     * @date 2018-05-18 16:41
-     */
-    public boolean isTokenExpired(Date expiration) {
-        return expiration.before(new Date());
-    }
-
     /**
      * 测试方法
      *
@@ -121,7 +81,6 @@ public class JwtUtils {
      */
     public static void main(String[] arr) {
         String jwt = new JwtUtils().createJWT("no.1", "这是个json消息", "夏天的猫");
-        new JwtUtils().verifyToken(jwt);
     }
 
     /**
@@ -130,14 +89,13 @@ public class JwtUtils {
      * @param token
      * @return
      */
-    public String getUsername(String token) {
+    public UserDetails getUser(String token) {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(issuer).build();
         DecodedJWT jwt = verifier.verify(token);
-        String subject = jwt.getSubject();
-        List<String> audience = jwt.getAudience();
-        String payload = jwt.getPayload();
+
+        JSONObject userJson = JSONObject.parseObject(jwt.getSubject());
+        BasicUser subject = JSON.toJavaObject(userJson, BasicUser.class);
         return subject;
     }
-
 }

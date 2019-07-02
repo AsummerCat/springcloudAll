@@ -5,6 +5,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -12,7 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * JWT 整合Spring Security
@@ -42,7 +44,15 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
         // 如果请求头中有token，则进行解析，并且设置认证信息
-        SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
+        try {
+            SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
+        } catch (UsernameNotFoundException e) {
+//           throw new ServletException("无法获取用户信息");
+            onUnsuccessfulAuthentication(request, response, e);
+            return;
+        }
+
+
         super.doFilterInternal(request, response, chain);
     }
 
@@ -52,11 +62,15 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
      * @param tokenHeader
      * @return
      */
-    private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
+    private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) throws UsernameNotFoundException {
         String token = tokenHeader.replace(jwtUtils.tokenPrefix, "");
-        String username = jwtUtils.getUsername(token);
-        if (StringUtils.isNotEmpty(username)) {
-            return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+        try {
+            UserDetails user = jwtUtils.getUser(token);
+            if (Objects.nonNull(user) && StringUtils.isNotEmpty(user.getUsername())) {
+                return new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+            }
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("无法获取用户信息");
         }
         return null;
     }
