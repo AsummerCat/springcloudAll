@@ -1,7 +1,6 @@
 package com.linjingc.loginservertoken.config.security;
 
-import com.linjingc.loginservertoken.utils.JwtConfig;
-import com.linjingc.loginservertoken.utils.JwtUtils;
+import com.linjingc.loginservertoken.config.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    private JwtConfig jwtConfig;
-    @Autowired
     private JwtUtils jwtUtils;
 
     /**
@@ -65,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 //不需要权限访问
-                .antMatchers( "/**.html", "/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**").permitAll()
+                .antMatchers("/**.html", "/**.html", "/**.css", "/img/**", "/**.js", "/third-party/**").permitAll()
                 //该路径需要验证通过
                 .antMatchers("/", "/index/", "/index/**").authenticated()
                 //该路径需要角色  or 权限XXX
@@ -88,9 +85,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //添加jwt验证
                 //登录校验
-                .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtConfig, jwtUtils)))
+                .addFilter((new JWTAuthenticationFilter(authenticationManager(), jwtUtils)))
                 //权限校验
-                .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
+              .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtUtils)))
                 .logout()
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");

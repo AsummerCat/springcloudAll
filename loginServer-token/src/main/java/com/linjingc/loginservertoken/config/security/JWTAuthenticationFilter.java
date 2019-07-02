@@ -1,9 +1,8 @@
 package com.linjingc.loginservertoken.config.security;
 
 import com.alibaba.fastjson.JSON;
+import com.linjingc.loginservertoken.config.jwt.JwtUtils;
 import com.linjingc.loginservertoken.entity.BasicUser;
-import com.linjingc.loginservertoken.utils.JwtConfig;
-import com.linjingc.loginservertoken.utils.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,12 +28,11 @@ import java.util.UUID;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
-    private JwtConfig jwtConfig;
+
     private JwtUtils jwtUtils;
 
-    JWTAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, JwtUtils jwtUtils) {
+    JWTAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
-        this.jwtConfig = jwtConfig;
         this.jwtUtils = jwtUtils;
     }
 
@@ -88,7 +86,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(jwtUser), userDetails.getUsername());
         // 但是这里创建的token只是单纯的token
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
-        response.setHeader(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
+        response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);
         //登录成功后转发到首页
         request.getRequestDispatcher("/").forward(request, response);
     }

@@ -25,9 +25,10 @@ basic:
   cookie:
     maxAge: 432000
   #JWT配置
-  JWT:
-    ##加密
+  jwt:
+    ## header:凭证(校验的变量名), expire:有效期1天(单位:s), secret:秘钥(普通字符串)
     secret: secret
     tokenPrefix: Bearer
     tokenHeader: Authorization
     issuer: issuer
+    expire: 5184000

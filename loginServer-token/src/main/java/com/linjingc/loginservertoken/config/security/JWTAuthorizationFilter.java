@@ -1,7 +1,6 @@
 package com.linjingc.loginservertoken.config.security;
 
-import com.linjingc.loginservertoken.utils.JwtConfig;
-import com.linjingc.loginservertoken.utils.JwtUtils;
+import com.linjingc.loginservertoken.config.jwt.JwtUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,12 +23,10 @@ import java.util.ArrayList;
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private JwtConfig jwtConfig;
     private JwtUtils jwtUtils;
 
-    JWTAuthorizationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, JwtUtils jwtUtils) {
+    JWTAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         super(authenticationManager);
-        this.jwtConfig = jwtConfig;
         this.jwtUtils = jwtUtils;
     }
 
@@ -38,9 +35,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-        String tokenHeader = request.getHeader(jwtUtils.TOKEN_HEADER);
+        String tokenHeader = request.getHeader(jwtUtils.tokenHeader);
         // 如果请求头中没有Authorization信息则直接放行了
-        if (StringUtils.isEmpty(tokenHeader) || !tokenHeader.startsWith(jwtUtils.TOKEN_PREFIX)) {
+        if (StringUtils.isEmpty(tokenHeader) || !tokenHeader.startsWith(jwtUtils.tokenPrefix)) {
             chain.doFilter(request, response);
             return;
         }
@@ -51,11 +48,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     /**
      * 这里从token中获取用户信息并新建一个token
+     *
      * @param tokenHeader
      * @return
      */
     private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
-        String token = tokenHeader.replace(jwtUtils.TOKEN_PREFIX, "");
+        String token = tokenHeader.replace(jwtUtils.tokenPrefix, "");
         String username = jwtUtils.getUsername(token);
         if (StringUtils.isNotEmpty(username)) {
             return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
