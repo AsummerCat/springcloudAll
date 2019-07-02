@@ -1,8 +1,7 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
+import com.linjingc.loginserversessiontoken.config.security.jwt.JwtUtils;
 import com.linjingc.loginserversessiontoken.entity.BasicUser;
-import com.linjingc.loginserversessiontoken.utils.JwtConfig;
-import com.linjingc.loginserversessiontoken.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,14 +26,12 @@ import java.util.ArrayList;
 public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private AuthenticationManager authenticationManager;
-    private JwtConfig jwtConfig;
     private JwtUtils jwtUtils;
 
-    public MyAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, JwtUtils jwtUtils) {
+    public MyAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
 
         super(new AntPathRequestMatcher("/login", "POST"));
         this.authenticationManager = authenticationManager;
-        this.jwtConfig = jwtConfig;
         this.jwtUtils = jwtUtils;
 
     }
@@ -62,17 +59,4 @@ public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilt
         }
         return authentication;
     }
-
-//    @Override
-////    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-////        log.info("--------------------------SecurityConfig自定义token会话认证加载----------------------------");
-////        //UserDetails principal = (UserDetails) authentication.getPrincipal();
-////        UserDetails principal =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-////
-////        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), principal.getUsername() + "登录成功", principal.getUsername());
-////        // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
-////        response.setHeader(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
-////
-////        super.successfulAuthentication(request, response, chain, authResult);
-////    }
 }

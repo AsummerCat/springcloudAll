@@ -34,13 +34,11 @@ eureka:
 
 
 basic:
-  # cookie配置
-  cookie:
-    maxAge: 432000
   #JWT配置
-  JWT:
+  jwt:
     ##加密
     secret: secret
     tokenPrefix: Bearer
     tokenHeader: Authorization
     issuer: issuer
+    expire: 5184000

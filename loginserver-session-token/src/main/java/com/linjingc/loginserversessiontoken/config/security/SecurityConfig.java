@@ -1,7 +1,6 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
-import com.linjingc.loginserversessiontoken.utils.JwtConfig;
-import com.linjingc.loginserversessiontoken.utils.JwtUtils;
+import com.linjingc.loginserversessiontoken.config.security.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,8 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new CustomUserService();
     }
 
-    @Autowired
-    private JwtConfig jwtConfig;
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
@@ -91,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //添加jwt验证
                 //权限校验
-                .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtConfig, jwtUtils)))
+                .addFilter((new JWTAuthorizationFilter(authenticationManager(), jwtUtils)))
                 .logout().deleteCookies("login-session")
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");

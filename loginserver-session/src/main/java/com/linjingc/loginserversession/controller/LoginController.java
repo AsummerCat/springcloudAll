@@ -73,7 +73,6 @@ public class LoginController {
     public String doPay(HttpServletRequest request, HttpServletResponse response) {
         UserDetails principal =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         HttpSession session = request.getSession();
-        Object jessionid = session.getAttribute("JESSIONID");
 
         return "session有效 进入首页";
     }

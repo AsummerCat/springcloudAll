@@ -1,6 +1,6 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
-import com.linjingc.loginserversessiontoken.utils.JwtUtils;
+import com.linjingc.loginserversessiontoken.config.security.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -65,7 +65,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
         String token = jwtUtils.createJWT(UUID.randomUUID().toString(), principal.getUsername() + "登录成功", principal.getUsername());
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
-        response.setHeader(jwtUtils.TOKEN_HEADER, jwtUtils.TOKEN_PREFIX + token);
+        response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
