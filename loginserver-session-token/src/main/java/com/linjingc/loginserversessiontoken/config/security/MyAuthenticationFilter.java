@@ -1,8 +1,7 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
+import com.linjingc.loginserversessiontoken.config.jwt.JwtUtils;
 import com.linjingc.loginserversessiontoken.entity.BasicUser;
-import com.linjingc.loginserversessiontoken.utils.JwtConfig;
-import com.linjingc.loginserversessiontoken.utils.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,14 +22,12 @@ import java.util.ArrayList;
 public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private AuthenticationManager authenticationManager;
-    private JwtConfig jwtConfig;
     private JwtUtils jwtUtils;
 
-    public MyAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, JwtUtils jwtUtils) {
+    public MyAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
 
         super(new AntPathRequestMatcher("/login", "POST"));
         this.authenticationManager = authenticationManager;
-        this.jwtConfig = jwtConfig;
         this.jwtUtils = jwtUtils;
 
     }
