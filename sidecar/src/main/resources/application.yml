@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Sidecar-Server-Node
+server:
+  port: 8550
+
+
+## eureka 客户端基本配置
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://admin:pass@localhost:8100/eureka
+    healthcheck:
+      enabled: true
+
+#异构微服务的配置， port 代表异构微服务的端口；health-uri 代表异构微服务的操作链接地址
+sidecar:
+  port: 8060
+  health-uri: http://localhost:8060/health.json
