@@ -1,6 +1,6 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
-import com.linjingc.loginserversessiontoken.config.security.jwt.JwtUtils;
+import com.linjingc.loginserversessiontoken.config.jwt.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
  * @date 2019年6月27日10:04:20
  */
 @Controller
-@ServletComponentScan
 public class LoginController {
 
 

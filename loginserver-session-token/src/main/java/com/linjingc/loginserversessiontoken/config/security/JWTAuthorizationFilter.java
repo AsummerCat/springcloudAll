@@ -1,6 +1,7 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
-import com.linjingc.loginserversessiontoken.config.security.jwt.JwtUtils;
+import com.linjingc.loginserversessiontoken.config.jwt.JwtUtils;
+import com.linjingc.loginserversessiontoken.entity.BasicUser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +37,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
+
+     //   BasicUser principal = (BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+     //todo 这里需要进行一步处理去查询这个session是否存在 存在就赋值给用户 如果没有就继续下一步的token校验
 
         String tokenHeader = request.getHeader(jwtUtils.tokenHeader);
         // 如果请求头中没有Authorization信息则直接放行了
