@@ -1,13 +1,13 @@
 spring:
   application:
-    name: config-server
+    name: config-client
 
 
 server:
   port: 8610
 
 
-## eureka 客户端基本配置
+# eureka 客户端基本配置
 eureka:
   instance:
     prefer-ip-address: true

@@ -1,4 +1,3 @@
-
 spring:
   application:
     name: Config-Server
@@ -6,16 +5,13 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/AsummerCat/SpringCloudAllConfig
+          uri: https://github.com/AsummerCat/SpringCloudConfigFileTest
           # 这里是配置git下面的具体目录 会    -> uri地址下的config-server目录中
           # {application} 自动根据项目名称去匹配
+#          search-paths: config-client
           search-paths: {application}
-        #  password: 如果需要权限访问
-        #  username: 如果需要权限访问
-              # 启动时加载配置文件
-         clone-on-start: true
 server:
-  port: 8600
+  port: 8888
 
 
 ## eureka 客户端基本配置
