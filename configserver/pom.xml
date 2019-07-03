@@ -11,7 +11,7 @@
     <groupId>com.linjingc</groupId>
     <artifactId>configserver</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>configserver</name>
+    <name>configServer</name>
     <description>配置服务中心</description>
 
     <properties>
