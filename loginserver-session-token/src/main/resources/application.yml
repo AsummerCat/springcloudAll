@@ -34,9 +34,6 @@ eureka:
 
 
 basic:
-  # cookie配置
-  cookie:
-    maxAge: 432000
   #JWT配置
   jwt:
     ##加密

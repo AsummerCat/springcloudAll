@@ -1,6 +1,6 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
-import com.linjingc.loginserversessiontoken.config.jwt.JwtUtils;
+import com.linjingc.loginserversessiontoken.config.security.jwt.JwtUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +44,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
         // 如果请求头中有token，则进行解析，并且设置认证信息
-        SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
+        try {
+            //fixme 这里有个问题不应该把用户的权限信息也赋值进去 传输给页面的token
+            SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
+        } catch (UsernameNotFoundException e) {
+            onUnsuccessfulAuthentication(request, response, e);
+            return;
+        }
         super.doFilterInternal(request, response, chain);
     }
 

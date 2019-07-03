@@ -45,6 +45,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         }
         // 如果请求头中有token，则进行解析，并且设置认证信息
         try {
+            //fixme 这里有个问题不应该把用户的权限信息也赋值进去 传输给页面的token
             SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
         } catch (UsernameNotFoundException e) {
 //           throw new ServletException("无法获取用户信息");

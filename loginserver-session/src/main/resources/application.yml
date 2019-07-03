@@ -30,12 +30,3 @@ eureka:
       enabled: true
 
 
-
-
-
-
-basic:
-  # cookie配置
-  cookie:
-    maxAge: 432000
-

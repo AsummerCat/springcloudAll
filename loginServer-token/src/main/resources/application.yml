@@ -21,9 +21,6 @@ eureka:
 
 
 basic:
-  # cookie配置
-  cookie:
-    maxAge: 432000
   #JWT配置
   jwt:
     ## header:凭证(校验的变量名), expire:有效期1天(单位:s), secret:秘钥(普通字符串)
