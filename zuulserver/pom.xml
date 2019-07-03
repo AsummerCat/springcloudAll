@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.linjingc</groupId>
-    <artifactId>zuulserver</artifactId>
+    <artifactId>zuulServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ZuulServer</name>
     <description>Demo project for Spring Boot</description>

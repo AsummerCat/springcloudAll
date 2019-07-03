@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Tip-Producer-Server
+    name: TipProducerServer
 server:
   port: 8200
 

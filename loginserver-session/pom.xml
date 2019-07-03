@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linjingc</groupId>
-	<artifactId>loginserver-session</artifactId>
+	<artifactId>loginServerSession</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>loginserver-session</name>
+	<name>loginServerSession</name>
 	<description>登录服务session版本</description>
 
 	<properties>

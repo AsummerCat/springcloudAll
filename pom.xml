@@ -10,15 +10,15 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>eurekaserver</module>
+        <module>eurekaServer</module>
         <module>loginserver-token</module>
         <module>loginserver-session-token</module>
         <module>loginserver-session</module>
         <module>tipsConsumer</module>
         <module>TipsProducer</module>
         <module>ZuulServer</module>
-        <module>configserver</module>
         <module>sidecar</module>
+        <module>configserver</module>
         <module>configclient</module>
     </modules>
 

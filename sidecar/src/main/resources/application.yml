@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Sidecar-Server-Node
+    name: SidecarServerNode
 server:
   port: 8550
 

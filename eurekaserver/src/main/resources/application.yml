@@ -1,6 +1,6 @@
 spring:
   application:
-    name: eureka-Server
+    name: eurekaServer
 
     # 添加密码校验
   security:

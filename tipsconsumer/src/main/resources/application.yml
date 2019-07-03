@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Tip-Consumer
+    name: TipConsumer
 server:
   port: 8300
 

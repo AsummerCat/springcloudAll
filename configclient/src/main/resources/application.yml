@@ -1,7 +1,15 @@
 spring:
   application:
-    name: config-client
-
+    name: configClient
+  cloud:
+    config:
+      profile: pro
+      # 分支
+      label: master
+      overrideNone: false
+      discovery:
+        enabled: true
+        service-id: ConfigServer
 
 server:
   port: 8610

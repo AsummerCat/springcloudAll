@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.linjingc</groupId>
-    <artifactId>loginserver-session-token</artifactId>
+    <artifactId>loginServerSessionToken</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>loginserver-session-token</name>
-    <description>登录服务 seesion整合token版本</description>
+    <name>loginServerSessionToken</name>
+    <description>登录服务Seesion整合token版本</description>
 
     <properties>
         <java.version>1.8</java.version>

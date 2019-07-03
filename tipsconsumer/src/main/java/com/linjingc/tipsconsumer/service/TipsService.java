@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Service
-@FeignClient(value = "Tip-Producer-Server", fallbackFactory = TipsServerFallBackFactory.class)
+@FeignClient(value = "TipProducerServer", fallbackFactory = TipsServerFallBackFactory.class)
 public interface TipsService {
 
     @RequestMapping(value = "sendTip/{tip}")

@@ -1,13 +1,11 @@
-spring:
-  cloud:
-    config:
-      #分支名称
-      #name: config-client
-      label: master
-      overrideNone: false
-      profile: dev
-      discovery:
-        enabled: true
-        service-id: Config-Server
-
-
+#spring:
+#  cloud:
+#    config:
+#      #分支名称
+#      #name: config-client
+#      overrideNone: false
+#      discovery:
+#        enabled: true
+#        service-id: ConfigServer
+#
+#

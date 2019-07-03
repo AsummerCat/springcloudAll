@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Login-Server-Session-Token
+    name: LoginServerSessionToken
  ## redis 配置
   redis:
     database: 1

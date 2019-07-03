@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.linjingc</groupId>
-    <artifactId>tipsconsumer</artifactId>
+    <artifactId>tipsConsumer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>tipsConsumer</name>
     <description>Demo project for Spring Boot</description>

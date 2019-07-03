@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.linjingc</groupId>
-    <artifactId>loginserver-token</artifactId>
+    <artifactId>loginserverToken</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>loginserver-token</name>
+    <name>loginserverToken</name>
     <description>登录服务-token版本</description>
 
     <properties>
