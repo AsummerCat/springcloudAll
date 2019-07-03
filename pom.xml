@@ -17,6 +17,9 @@
         <module>tipsConsumer</module>
         <module>TipsProducer</module>
         <module>ZuulServer</module>
+        <module>configserver</module>
+        <module>sidecar</module>
+        <module>configclient</module>
     </modules>
 
     <properties>
