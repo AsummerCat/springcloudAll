@@ -75,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 //设置cookie有效期
                 .tokenValiditySeconds(60 * 60 * 24 * 7)
+                .key("test")
                 .and()
                 .formLogin()
                 //自定义登录页
