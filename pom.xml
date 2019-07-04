@@ -20,6 +20,7 @@
         <module>sidecar</module>
         <module>configserver</module>
         <module>configclient</module>
+        <module>loginzuuloauth</module>
     </modules>
 
     <properties>
