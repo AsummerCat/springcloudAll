@@ -26,8 +26,10 @@ public class LoginController {
      *
      * @return
      */
-    @RequestMapping(value="/hello")
+    @RequestMapping(value = "/hello")
     public String hello() {
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(principal.getUsername());
         return "hello";
     }
 
@@ -70,7 +72,7 @@ public class LoginController {
     @RequestMapping("doPay")
     @ResponseBody
     public String doPay(HttpServletRequest request, HttpServletResponse response) {
-        UserDetails principal =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return "session有效 进入首页";
     }

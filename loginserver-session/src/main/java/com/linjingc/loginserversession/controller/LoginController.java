@@ -27,8 +27,10 @@ public class LoginController {
      *
      * @return
      */
-    @RequestMapping(value="/hello")
+    @RequestMapping(value = "/hello")
     public String hello() {
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(principal.getUsername());
         return "hello";
     }
 
