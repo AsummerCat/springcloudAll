@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -43,18 +44,18 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             throws ServletException, IOException {
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
+        //创建token
+        createToken(response);
+
         if (savedRequest == null) {
             super.onAuthenticationSuccess(request, response, authentication);
 
             return;
         }
         String targetUrlParameter = getTargetUrlParameter();
-        if (isAlwaysUseDefaultTargetUrl()
-                || (targetUrlParameter != null && StringUtils.hasText(request
-                .getParameter(targetUrlParameter)))) {
+        if (isAlwaysUseDefaultTargetUrl() || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
             requestCache.removeRequest(request, response);
             super.onAuthenticationSuccess(request, response, authentication);
-
             return;
         }
 
@@ -63,18 +64,27 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         // Use the DefaultSavedRequest URL
         String targetUrl = savedRequest.getRedirectUrl();
         logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
-        //在这里把token加入进去
-        BasicUser principal = (BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //把权限信息关闭
-        principal.setAuthorities(new ArrayList<>());
-        //创建token
-        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(principal), principal.getUsername());
-        // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
-        response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     public void setRequestCache(RequestCache requestCache) {
         this.requestCache = requestCache;
+    }
+
+
+    /**
+     * 创建token
+     * @param response
+     */
+    public void createToken(HttpServletResponse response){
+        //在这里把token加入进去
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //把权限信息关闭
+        BasicUser basicUser=new BasicUser();
+        basicUser.setUsername(principal.getUsername());
+        //创建token
+        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(principal), principal.getUsername());
+        // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
+        response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);
     }
 }

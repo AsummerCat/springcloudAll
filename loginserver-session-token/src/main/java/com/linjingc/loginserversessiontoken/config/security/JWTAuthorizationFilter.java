@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -71,7 +72,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             UserDetails user = jwtUtils.getUser(token);
             if (Objects.nonNull(user) && StringUtils.isNotEmpty(user.getUsername())) {
-                return new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+                return new UsernamePasswordAuthenticationToken(user.getUsername(), null,new ArrayList<>());
             }
         } catch (Exception e) {
             throw new UsernameNotFoundException("无法获取用户信息");
