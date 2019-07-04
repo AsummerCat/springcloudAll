@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author cxc
@@ -36,8 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtUtils jwtUtils;
-    @Autowired
-    private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
 
     /**
      * 这里可以设置忽略的路径或者文件
@@ -80,8 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(60 * 60 * 24 * 7)
                 .and()
                 .formLogin()
-                //成功后处理器
-//                .successHandler(myAuthenticationSuccessHandler)
                 //自定义登录页
                 .loginPage("/login")
 //                //登录成功页面
@@ -94,9 +89,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().deleteCookies("login-session")
                 //退出登录后的默认url是"/home"
                 .logoutSuccessUrl("/byeBye");
-
-         http.addFilterBefore(new MyAuthenticationFilter(authenticationManager(), jwtUtils), UsernamePasswordAuthenticationFilter.class);
-
     }
 
 
@@ -144,7 +136,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
-
         return super.authenticationManagerBean();
     }
 

@@ -1,5 +1,6 @@
 package com.linjingc.loginserversessiontoken.controller;
 
+import com.linjingc.loginserversessiontoken.config.jwt.aop.JwtLoginAop;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,9 +28,8 @@ public class LoginController {
      * @return
      */
     @RequestMapping(value = "/hello")
+    @JwtLoginAop
     public String hello() {
-        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(principal.getUsername());
         return "hello";
     }
 
