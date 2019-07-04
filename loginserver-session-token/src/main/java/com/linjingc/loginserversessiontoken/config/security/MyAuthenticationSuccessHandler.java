@@ -32,10 +32,6 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    @Autowired
-    private JwtUtils jwtUtils;
-
-
     private RequestCache requestCache = new HttpSessionRequestCache();
 
     @Override
@@ -44,8 +40,6 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             throws ServletException, IOException {
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-        //创建token
-        createToken(response);
 
         if (savedRequest == null) {
             super.onAuthenticationSuccess(request, response, authentication);
@@ -68,22 +62,5 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
     public void setRequestCache(RequestCache requestCache) {
         this.requestCache = requestCache;
-    }
-
-
-    /**
-     * 创建token
-     * @param response
-     */
-    public void createToken(HttpServletResponse response){
-        //在这里把token加入进去
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //把权限信息关闭
-        BasicUser basicUser=new BasicUser();
-        basicUser.setUsername(principal.getUsername());
-        //创建token
-        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(principal), principal.getUsername());
-        // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
-        response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);
     }
 }

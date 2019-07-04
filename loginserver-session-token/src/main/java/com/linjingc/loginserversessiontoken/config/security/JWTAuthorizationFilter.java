@@ -49,7 +49,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         // 如果请求头中没有Authorization信息则直接放行了
         if (StringUtils.isNotEmpty(tokenHeader) && tokenHeader.startsWith(jwtUtils.tokenPrefix)) {
             try {
-                //fixme 这里有个问题不应该把用户的权限信息也赋值进去 传输给页面的token
+                // 这里有个问题不应该把用户的权限信息也赋值进去 传输给页面的token
                 SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
             } catch (UsernameNotFoundException e) {
                 onUnsuccessfulAuthentication(request, response, e);

@@ -9,12 +9,16 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.linjingc.loginserversessiontoken.entity.BasicUser;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 @Data
@@ -97,5 +101,22 @@ public class JwtUtils {
         JSONObject userJson = JSONObject.parseObject(jwt.getSubject());
         BasicUser subject = JSON.toJavaObject(userJson, BasicUser.class);
         return subject;
+    }
+
+    /**
+     * 创建token 并设置头消息
+     *
+     * @param response
+     */
+    public void createToken(HttpServletResponse response) {
+        //在这里把token加入进去
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //把权限信息关闭
+        BasicUser basicUser = new BasicUser();
+        basicUser.setUsername(principal.getUsername());
+        //创建token
+        String token = createJWT(UUID.randomUUID().toString(), JSON.toJSONString(principal), principal.getUsername());
+        // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
+        response.setHeader(tokenHeader, tokenPrefix + token);
     }
 }
