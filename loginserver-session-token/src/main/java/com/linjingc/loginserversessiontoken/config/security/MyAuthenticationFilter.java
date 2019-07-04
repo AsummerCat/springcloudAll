@@ -54,7 +54,6 @@ public class MyAuthenticationFilter extends AbstractAuthenticationProcessingFilt
         if (authentication != null) {
             super.setContinueChainBeforeSuccessfulAuthentication(true);
             //因为是使用seesion管理的话 这边使用自定义注册token
-            // setSessionAuthenticationStrategy(new RegisterTokenAuthenticationStrategy(jwtUtils));
             setAuthenticationSuccessHandler(new MyAuthenticationSuccessHandler());
         }
         return authentication;

@@ -1,7 +1,6 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
 import com.linjingc.loginserversessiontoken.config.jwt.JwtUtils;
-import com.linjingc.loginserversessiontoken.entity.BasicUser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +13,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -38,24 +38,26 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-     //   BasicUser principal = (BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-     //todo 这里需要进行一步处理去查询这个session是否存在 存在就赋值给用户 如果没有就继续下一步的token校验
-
-        String tokenHeader = request.getHeader(jwtUtils.tokenHeader);
-        // 如果请求头中没有Authorization信息则直接放行了
-        if (StringUtils.isEmpty(tokenHeader) || !tokenHeader.startsWith(jwtUtils.tokenPrefix)) {
+        //这里需要进行一步处理去查询这个sessionId是否存在 直接走过滤器 如果没有就继续下一步的token校验
+        if (existSessionId(request)) {
             chain.doFilter(request, response);
             return;
         }
-        // 如果请求头中有token，则进行解析，并且设置认证信息
-        try {
-            //fixme 这里有个问题不应该把用户的权限信息也赋值进去 传输给页面的token
-            SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
-        } catch (UsernameNotFoundException e) {
-            onUnsuccessfulAuthentication(request, response, e);
+
+        String tokenHeader = request.getHeader(jwtUtils.tokenHeader);
+        // 如果请求头中没有Authorization信息则直接放行了
+        if (StringUtils.isNotEmpty(tokenHeader) && tokenHeader.startsWith(jwtUtils.tokenPrefix)) {
+            try {
+                //fixme 这里有个问题不应该把用户的权限信息也赋值进去 传输给页面的token
+                SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
+            } catch (UsernameNotFoundException e) {
+                onUnsuccessfulAuthentication(request, response, e);
+                return;
+            }
+            super.doFilterInternal(request, response, chain);
             return;
         }
-        super.doFilterInternal(request, response, chain);
+        chain.doFilter(request, response);
     }
 
     /**
@@ -75,5 +77,23 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             throw new UsernameNotFoundException("无法获取用户信息");
         }
         return null;
+    }
+
+
+    /**
+     * 判断是否存在sessionId
+     *
+     * @param request
+     * @return
+     */
+    private boolean existSessionId(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            if (StringUtils.isNotEmpty(session.getId())) {
+                return true;
+            }
+        }
+        return false;
+
     }
 }
