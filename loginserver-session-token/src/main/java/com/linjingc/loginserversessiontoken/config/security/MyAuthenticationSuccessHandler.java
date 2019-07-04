@@ -1,11 +1,12 @@
 package com.linjingc.loginserversessiontoken.config.security;
 
+import com.alibaba.fastjson.JSON;
 import com.linjingc.loginserversessiontoken.config.jwt.JwtUtils;
+import com.linjingc.loginserversessiontoken.entity.BasicUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -18,10 +19,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
  * 自定义登录成功 后置处理
+ *
  * @author cxc
  * @date 2019/7/2 21:17
  */
@@ -61,9 +64,11 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         String targetUrl = savedRequest.getRedirectUrl();
         logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
         //在这里把token加入进去
-        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), principal.getUsername() + "登录成功", principal.getUsername());
+        BasicUser principal = (BasicUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //把权限信息关闭
+        principal.setAuthorities(new ArrayList<>());
+        //创建token
+        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(principal), principal.getUsername());
         // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
         response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
