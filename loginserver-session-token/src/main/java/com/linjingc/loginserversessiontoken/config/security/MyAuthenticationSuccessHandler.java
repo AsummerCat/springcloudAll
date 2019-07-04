@@ -61,6 +61,15 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
         clearAuthenticationAttributes(request);
 
+        //在这里把token加入进去
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //把权限信息关闭
+        BasicUser basicUser=new BasicUser();
+        basicUser.setUsername(principal.getUsername());
+        //创建token
+        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(principal), principal.getUsername());
+        // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
+        response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);
         // Use the DefaultSavedRequest URL
         String targetUrl = savedRequest.getRedirectUrl();
         logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
@@ -77,14 +86,6 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
      * @param response
      */
     public void createToken(HttpServletResponse response){
-        //在这里把token加入进去
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //把权限信息关闭
-        BasicUser basicUser=new BasicUser();
-        basicUser.setUsername(principal.getUsername());
-        //创建token
-        String token = jwtUtils.createJWT(UUID.randomUUID().toString(), JSON.toJSONString(principal), principal.getUsername());
-        // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
-        response.setHeader(jwtUtils.tokenHeader, jwtUtils.tokenPrefix + token);
+
     }
 }
