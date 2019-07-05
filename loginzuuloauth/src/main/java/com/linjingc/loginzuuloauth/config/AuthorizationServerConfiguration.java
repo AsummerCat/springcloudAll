@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+    private static final String DEMO_RESOURCE_ID = "order";
 
     @Autowired
     @Qualifier("authenticationManagerBean")
@@ -31,6 +33,20 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         super.configure(clients);
+        String finalSecret = "{bcrypt}"+new BCryptPasswordEncoder().encode("123456");
+
+        clients.inMemory().withClient("client_1")
+                .resourceIds(DEMO_RESOURCE_ID)
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("select")
+                .authorities("oauth2")
+                .secret(finalSecret)
+                .and().withClient("client_2")
+                .resourceIds(DEMO_RESOURCE_ID)
+                .authorizedGrantTypes("password", "refresh_token")
+                .scopes("select")
+                .authorities("oauth2")
+                .secret(finalSecret);
     }
 
 
