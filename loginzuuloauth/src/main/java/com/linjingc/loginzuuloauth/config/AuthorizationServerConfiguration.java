@@ -2,6 +2,7 @@ package com.linjingc.loginzuuloauth.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -21,9 +22,11 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    RedisConnectionFactory redisConnectionFactory;
+    @Qualifier("authenticationManagerBean")
+    private AuthenticationManager authenticationManager;
+
     @Autowired
-    AuthenticationManager authenticationManager;
+    RedisConnectionFactory redisConnectionFactory;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -37,16 +40,19 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         super.configure(endpoints);
-        endpoints
-                .tokenStore(new RedisTokenStore(redisConnectionFactory))
-                .authenticationManager(authenticationManager);
+        endpoints.tokenStore(new RedisTokenStore(redisConnectionFactory)).authenticationManager(authenticationManager);
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        super.configure(security);
+       // super.configure(security);
+        security
+                .tokenKeyAccess("permitAll()")
+                .checkTokenAccess("permitAll()")
+                .allowFormAuthenticationForClients();
+
         //允许表单认证
-        security.allowFormAuthenticationForClients();
+     //   security.allowFormAuthenticationForClients();
     }
 
 }
