@@ -32,7 +32,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        super.configure(clients);
         String finalSecret = "{bcrypt}"+new BCryptPasswordEncoder().encode("123456");
 
         clients.inMemory().withClient("client_1")
@@ -46,7 +45,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authorizedGrantTypes("password", "refresh_token")
                 .scopes("select")
                 .authorities("oauth2")
-                .secret(finalSecret);
+                .secret("123456");
     }
 
 
