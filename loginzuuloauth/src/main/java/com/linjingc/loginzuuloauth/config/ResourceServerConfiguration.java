@@ -32,7 +32,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-
         http.requestMatchers().anyRequest()
                 .and()
                 .anonymous()
@@ -40,6 +39,5 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 //配置order访问控制，必须认证过后才可以访问
                 .antMatchers("/order/**").authenticated();
-
     }
 }

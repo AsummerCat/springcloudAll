@@ -3,7 +3,7 @@ spring:
     name: ZuulServerOauth2
   ## redis 配置
   redis:
-    database: 1
+    database: 3
     host: 112.74.43.136
     port: 6379
     password: jingbaobao
@@ -20,5 +20,5 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://admin:pass@localhost:8100/eureka
-      healthcheck:
-        enabled: true
+
+logging.level.org.springframework.security: DEBUG

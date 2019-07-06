@@ -3,9 +3,9 @@ package com.linjingc.loginzuuloauth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -32,7 +32,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        String finalSecret = "{bcrypt}"+new BCryptPasswordEncoder().encode("123456");
+        String finalSecret = "{bcrypt}" + new BCryptPasswordEncoder().encode("123456");
 
         clients.inMemory().withClient("client_1")
                 .resourceIds(DEMO_RESOURCE_ID)
@@ -40,34 +40,34 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .scopes("select")
                 .authorities("oauth2")
                 .secret(finalSecret)
-                .and().withClient("client_2")
+                .and()
+                .withClient("client_2")
                 .resourceIds(DEMO_RESOURCE_ID)
                 .authorizedGrantTypes("password", "refresh_token")
                 .scopes("select")
                 .authorities("oauth2")
-                .secret("123456");
+                .secret("123456")
+                .accessTokenValiditySeconds(10000)
+                .refreshTokenValiditySeconds(10000);
     }
-
-
-
 
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        super.configure(endpoints);
-        endpoints.tokenStore(new RedisTokenStore(redisConnectionFactory)).authenticationManager(authenticationManager);
+        endpoints
+                .tokenStore(new RedisTokenStore(redisConnectionFactory))
+                .authenticationManager(authenticationManager)
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-       // super.configure(security);
+        //允许表单认证
         security
                 .tokenKeyAccess("permitAll()")
                 .checkTokenAccess("permitAll()")
                 .allowFormAuthenticationForClients();
 
-        //允许表单认证
-     //   security.allowFormAuthenticationForClients();
     }
 
 }
